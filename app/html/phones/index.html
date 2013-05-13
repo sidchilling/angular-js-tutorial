@@ -1,0 +1,83 @@
+<%namespace name="includes" file="../general/includes.html" inheritable="True" />
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta charset="utf-8">
+	<title>Phone Gallery</title>
+	<link rel="stylesheet" type="text/css" href="http://localhost:8000/css/phones/app.css">
+	<link rel="stylesheet" type="text/css" href="http://localhost:8000/css/phones/bootstrap.min.css">
+	<script type="text/javascript" src="http://localhost:8000/javascript/phones/lib/angular/angular.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/javascript/phones/js/app.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/javascript/phones/js/controllers.js"></script>
+    </head>
+    <body ng-app="phones">
+	<div ng-view></div> <!-- Views will be displayed here -->
+    </body>
+	
+    <script type="text/ng-template" id="phone-listing.html">
+	<div class="container-fluid" ng-controller="PhoneListController">
+
+	    <div class="row-fluid" ng-show="has_query(query)">
+		<div class="span12">
+		    <div class="alert">
+			Query: <b>{{query}}</b>
+		    </div>
+		</div>
+	    </div>
+
+	    <div class="row-fluid">
+		<div class="span2">
+		    Search: <input id="query_input" name="query_input" ng-model="query">
+		    Sort by:
+		    <select ng-model="order" id="order_select" name="order_select">
+			<option value="name" id="name_order" name="name_order">Alphabetical</option>
+			<option value="age" id="age_order" name="age_order">Newset</option>
+		    </select>
+		</div>
+		<div class="span10">
+		    <ul>
+			<li ng-repeat="phone in phones | filter: query | orderBy: order: reverse">
+			    <a href="#/phones/{{phone.id}}" class="thumb">
+				<img ng-src="{{phone.image_url}}">
+			    </a>
+			    <a href="#/phones/{{phone.id}}">{{phone.name}}</a>
+			    <p>{{phone.snippet}}</p>
+			</li>
+		    </ul>
+		</div>
+	    </div>
+    </script>
+
+    <script type="text/ng-template" id="phone-details.html">
+	<div class="container-fluid" ng-controller="PhoneDetailController">
+	    <div class="row-fluid">
+		<div class="span12">
+		    <img ng-src="{{main_image}}" class="phone">
+		    <h1>{{phone_details.name}}</h1>
+		    <p>{{phone_details.description}}</p>
+		    <ul class="phone-thumbs">
+			<li ng-repeat="img in phone_details.images">
+			    <img ng-src="{{img}}" ng-click="set_image(img)" style="max-width: 100px; min-width: 100px;">
+			</li>
+		    </ul>
+		    <ul class="specs">
+			<li>
+			    <span>Availability and Networks</span>
+			    <dl>
+				<dt>Availability</dt>
+				<dd ng-repeat="avail in phone_details.availability">{{avail}}</dd>
+			    </dl>
+			</li>
+			<li>
+			    <span>Additional Features</span>
+			    <dl>
+				<dt>{{phone_details.additional_features}}
+			    </dl>
+			</li>
+		    </ul>
+		</div>
+	    </div>
+	</div>
+    </script>
+
+</html>
